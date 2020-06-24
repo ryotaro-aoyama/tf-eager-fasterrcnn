@@ -12,7 +12,7 @@ class CocoDataSet(object):
                  mean=(0, 0, 0),
                  std=(1, 1, 1),
                  scale=(1024, 800),
-                 debug=False):
+                 debug=False,year=2017):
         '''Load a subset of the COCO dataset.
         
         Attributes
@@ -30,7 +30,7 @@ class CocoDataSet(object):
             raise AssertionError('subset must be "train" or "val".')
             
 
-        self.coco = COCO("{}/annotations/instances_{}2017.json".format(dataset_dir, subset))
+        self.coco = COCO("{}/annotations/instances_{}{}.json".format(dataset_dir, subset, year))
 
         # get the mapping from original category ids to labels
         self.cat_ids = self.coco.getCatIds()
@@ -48,7 +48,7 @@ class CocoDataSet(object):
         if debug:
             self.img_ids, self.img_infos = self.img_ids[:20], self.img_infos[:20]
             
-        self.image_dir = "{}/{}2017".format(dataset_dir, subset)
+        self.image_dir = "{}/{}{}".format(dataset_dir, subset, year)
         
         self.flip_ratio = flip_ratio
         
@@ -202,5 +202,6 @@ class CocoDataSet(object):
             
         Note that the first item 'bg' means background.
         '''
-        return ['bg'] + [self.coco.loadCats(i)[0]["name"] for i in self.cat2label.keys()]
+        ca = ['bg'] + [self.coco.loadCats(i)[0]["name"] for i in self.cat2label.keys()]
+        return ca
 
